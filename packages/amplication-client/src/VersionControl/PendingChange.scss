@@ -1,0 +1,39 @@
+@import "../style/index.scss";
+
+.pending-change {
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: var(--default-spacing);
+  @include flexFullRow;
+
+  &__spacer {
+    flex: 1;
+  }
+  &__action {
+    height: var(--double-spacing);
+    width: var(--double-spacing);
+    min-width: var(--double-spacing);
+    min-height: var(--double-spacing);
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--static-white);
+    margin-bottom: 0;
+    margin-left: var(--double-spacing);
+    margin-right: var(--default-spacing);
+
+    &.update {
+      background-color: var(--secondary-light-blue);
+    }
+    &.delete {
+      background-color: var(--negative);
+    }
+    &.create {
+      background-color: var(--positive-default);
+    }
+  }
+  &__version {
+    font-weight: 500;
+  }
+}

@@ -1,0 +1,77 @@
+@import "../style/index.scss";
+
+$empty-state-image-size: 120px;
+$counter-height: 18px;
+
+.pending-changes {
+  padding: var(--default-spacing);
+
+  &__header {
+    @include flexFullRowWithSpacing;
+    h3 {
+      margin: 0;
+    }
+  }
+
+  &__changes-header {
+    @include flexFullRowWithSpacing;
+    @include body2;
+
+    :last-child {
+      margin-left: 0;
+    }
+    .amp-button {
+      margin-left: 0;
+    }
+
+    .amp-icon {
+      font-size: 18px;
+    }
+  }
+
+  &__changes-count {
+    background-color: var(--black10);
+    height: $counter-height;
+    border-radius: $counter-height / 2;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    color: var(--black100);
+    box-sizing: border-box;
+    white-space: nowrap;
+    width: auto;
+    margin-left: var(--default-spacing-small);
+    min-width: $counter-height;
+  }
+
+  &__empty-state {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    img {
+      height: $empty-state-image-size;
+    }
+
+    &__title {
+      @include body2;
+      text-align: center;
+      margin-bottom: var(--large-spacing);
+    }
+  }
+
+  &__changes {
+    margin-top: var(--default-spacing);
+    position: relative;
+    margin-bottom: var(--default-spacing);
+  }
+}
+
+.commit-dialog {
+  .amp-dialog__body {
+    .amp-button {
+      width: 100%;
+    }
+  }
+}

@@ -1,0 +1,47 @@
+@import "./style/index.scss";
+
+body {
+  margin: 0;
+  font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--surface);
+  font-size: var(--normal-font-size);
+}
+
+:root {
+  --mdc-top-bar-adjust: 50px;
+}
+
+.mdc-top-app-bar a {
+  color: inherit;
+  text-decoration: none;
+}
+
+div.mdc-top-app-bar--fixed-adjust {
+  padding-top: var(--mdc-top-bar-adjust);
+}
+
+a {
+  text-decoration: none;
+  color: var(--black80);
+  @include semiBold;
+}
+
+h1 {
+  @include pageTitle;
+}
+
+h2 {
+  @include sectionTitle;
+}
+
+h3 {
+  @include title1;
+}
+
+h4 {
+  @include headline-description;
+}

@@ -1,0 +1,13 @@
+schema: "packages/amplication-server/src/schema.graphql"
+generates:
+  packages/amplication-client/src/models.ts:
+    - typescript
+  packages/amplication-data-service-generator/src/models.ts:
+    - typescript
+  packages/amplication-data/src/models.ts:
+    - typescript
+  packages/amplication-cli/src/models.ts:
+    - typescript
+hooks:
+  afterAllFileWrite:
+    - prettier --write
