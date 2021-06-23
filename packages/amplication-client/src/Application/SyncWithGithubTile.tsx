@@ -1,16 +1,11 @@
-import React, { useCallback } from "react";
-import { useHistory } from "react-router-dom";
-import { useQuery } from "@apollo/client";
+import React from "react";
+
 import { Panel, EnumPanelStyle } from "@amplication/design-system";
 import { Icon } from "@rmwc/icon";
 import { CircularProgress } from "@rmwc/circular-progress";
 
-import { GET_APPLICATION } from "../Application/ApplicationHome";
-
-import * as models from "../models";
-import { useTracking, Event as TrackEvent } from "../util/analytics";
 import { SvgThemeImage, EnumImages } from "../Components/SvgThemeImage";
-
+import useSyncWithGithubTile from "./useSyncWithGithubTile";
 import "./SyncWithGithubTile.scss";
 
 type Props = {
@@ -19,29 +14,12 @@ type Props = {
 
 const CLASS_NAME = "sync-with-github-tile";
 
-const EVENT_DATA: TrackEvent = {
-  eventName: "syncWithGitHubTileClick",
-};
-
 function SyncWithGithubTile({ applicationId }: Props) {
-  const history = useHistory();
-  const { data, loading } = useQuery<{
-    app: models.App;
-  }>(GET_APPLICATION, {
-    variables: {
-      id: applicationId,
-    },
-  });
-
-  const { trackEvent } = useTracking();
-
-  const handleClick = useCallback(
-    (event) => {
-      trackEvent(EVENT_DATA);
-      history.push(`/${applicationId}/github`);
-    },
-    [history, trackEvent, applicationId]
-  );
+  const {
+    loading,
+    data,
+    handleClick,
+  } = useSyncWithGithubTile({applicationId});
 
   return (
     <Panel

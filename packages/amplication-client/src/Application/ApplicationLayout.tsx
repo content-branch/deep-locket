@@ -1,8 +1,7 @@
-import React, { useState, useCallback, useEffect, useMemo } from "react";
+import React from "react";
 import { Switch, Route, match } from "react-router-dom";
-import { gql, useQuery } from "@apollo/client";
 
-import ApplicationHome, { GET_APPLICATION } from "./ApplicationHome";
+import ApplicationHome from "./ApplicationHome";
 import Entities from "../Entity/Entities";
 import { RelatedFieldsMigrationFix } from "../Entity/RelatedFieldsMigrationFix";
 import Pages from "../Pages/Pages";
@@ -14,7 +13,6 @@ import NewEntityPage from "../Pages/NewEntityPage";
 import PendingChangesPage from "../VersionControl/PendingChangesPage";
 
 import "./ApplicationLayout.scss";
-import * as models from "../models";
 
 import MenuItem from "../Layout/MenuItem";
 import MainLayout from "../Layout/MainLayout";
@@ -30,15 +28,9 @@ import ScreenResolutionMessage from "../Layout/ScreenResolutionMessage";
 import PendingChangesMenuItem from "../VersionControl/PendingChangesMenuItem";
 import Commits from "../VersionControl/Commits";
 import NavigationTabs from "../Layout/NavigationTabs";
+import useApplicationLayout, {EnumFixedPanelKeys} from "./useApplicationLayout";
 
-enum EnumFixedPanelKeys {
-  None = "None",
-  PendingChanges = "PendingChanges",
-}
 
-export type ApplicationData = {
-  app: models.App;
-};
 
 export type PendingChangeStatusData = {
   pendingChanges: PendingChangeItem[];
@@ -55,122 +47,14 @@ type Props = {
 };
 
 function ApplicationLayout({ match }: Props) {
-  const { application } = match.params;
-
-  const [pendingChanges, setPendingChanges] = useState<PendingChangeItem[]>([]);
-  const [commitRunning, setCommitRunning] = useState<boolean>(false);
-
-  const [selectedFixedPanel, setSelectedFixedPanel] = useState<string>(
-    EnumFixedPanelKeys.PendingChanges
-  );
-
-  const handleMenuItemWithFixedPanelClicked = useCallback(
-    (panelKey: string) => {
-      if (selectedFixedPanel === panelKey) {
-        setSelectedFixedPanel(EnumFixedPanelKeys.None);
-      } else {
-        setSelectedFixedPanel(panelKey);
-      }
-    },
-    [selectedFixedPanel]
-  );
-
-  const { data: pendingChangesData, refetch } = useQuery<
-    PendingChangeStatusData
-  >(GET_PENDING_CHANGES_STATUS, {
-    variables: {
-      applicationId: application,
-    },
-  });
-
-  const { data: applicationData } = useQuery<ApplicationData>(GET_APPLICATION, {
-    variables: {
-      id: match.params.application,
-    },
-  });
-
-  useEffect(() => {
-    setPendingChanges(
-      pendingChangesData ? pendingChangesData.pendingChanges : []
-    );
-  }, [pendingChangesData, setPendingChanges]);
-
-  const addChange = useCallback(
-    (
-      resourceId: string,
-      resourceType: models.EnumPendingChangeResourceType
-    ) => {
-      const existingChange = pendingChanges.find(
-        (changeItem) =>
-          changeItem.resourceId === resourceId &&
-          changeItem.resourceType === resourceType
-      );
-      if (existingChange) {
-        //reassign pending changes to trigger refresh
-        setPendingChanges([...pendingChanges]);
-      } else {
-        setPendingChanges(
-          pendingChanges.concat([
-            {
-              resourceId,
-              resourceType,
-            },
-          ])
-        );
-      }
-    },
-    [pendingChanges, setPendingChanges]
-  );
-
-  const addEntity = useCallback(
-    (entityId: string) => {
-      addChange(entityId, models.EnumPendingChangeResourceType.Entity);
-    },
-    [addChange]
-  );
-
-  const addBlock = useCallback(
-    (blockId: string) => {
-      addChange(blockId, models.EnumPendingChangeResourceType.Block);
-    },
-    [addChange]
-  );
-
-  const resetPendingChanges = useCallback(() => {
-    setPendingChanges([]);
-    refetch();
-  }, [refetch]);
-
-  const setCommitRunningCallback = useCallback(
-    (isRunning: boolean) => {
-      setCommitRunning(isRunning);
-    },
-    [setCommitRunning]
-  );
-
-  const pendingChangesContextValue = useMemo(
-    () => ({
-      pendingChanges,
-      commitRunning,
-      setCommitRunning: setCommitRunningCallback,
-      addEntity,
-      addBlock,
-      addChange,
-      reset: resetPendingChanges,
-    }),
-    [
-      pendingChanges,
-      commitRunning,
-      addEntity,
-      addBlock,
-      addChange,
-      resetPendingChanges,
-      setCommitRunningCallback,
-    ]
-  );
-
-  const pendingChangesBadge =
-    (pendingChanges.length && pendingChanges.length.toString()) || null;
+  const {
+    pendingChangesBadge,
+    pendingChangesContextValue,
+    application,
+    applicationData,
+    selectedFixedPanel,
+    handleMenuItemWithFixedPanelClicked
+  } = useApplicationLayout({match});
 
   return (
     <PendingChangesContext.Provider value={pendingChangesContextValue}>
@@ -266,12 +150,3 @@ const enhance = track((props) => {
 });
 
 export default enhance(ApplicationLayout);
-
-export const GET_PENDING_CHANGES_STATUS = gql`
-  query pendingChangesStatus($applicationId: String!) {
-    pendingChanges(where: { app: { id: $applicationId } }) {
-      resourceId
-      resourceType
-    }
-  }
-`;

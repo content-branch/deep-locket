@@ -12,7 +12,7 @@ import { downloadArchive } from "./BuildSteps";
 import useBuildWatchStatus from "./useBuildWatchStatus";
 import { BuildStepsStatus } from "./BuildStepsStatus";
 import { HelpPopover } from "../Components/HelpPopover";
-import { GET_APPLICATION } from "../Application/ApplicationHome";
+import { GET_APPLICATION } from "../Application/useApplicationHome";
 import useLocalStorage from "react-use-localstorage";
 
 import "./BuildSummary.scss";

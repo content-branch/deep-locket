@@ -1,11 +1,8 @@
 import React from "react";
-import { Switch, Route, match, useLocation } from "react-router-dom";
-import { gql, useQuery } from "@apollo/client";
+import { Switch, Route } from "react-router-dom";
 import { Snackbar } from "@rmwc/snackbar";
 import "@rmwc/snackbar/styles";
 import classNames from "classnames";
-import * as models from "../models";
-import { formatError } from "../util/error";
 import PageContent from "../Layout/PageContent";
 import { CircleBadge } from "@amplication/design-system";
 import ApplicationForm from "./ApplicationForm";
@@ -16,36 +13,19 @@ import EntitiesTile from "./EntitiesTile";
 import NewVersionTile from "./NewVersionTile";
 import RolesTile from "./RolesTile";
 import { COLOR_TO_NAME } from "./constants";
-import useNavigationTabs from "../Layout/UseNavigationTabs";
 import InnerTabLink from "../Layout/InnerTabLink";
 import { ApiTokenList } from "../Settings/ApiTokenList";
-
-type Props = {
-  match: match<{ application: string }>;
-};
+import useApplicationHome, {Props} from "./useApplicationHome";
 
 const CLASS_NAME = "application-home";
-const NAVIGATION_KEY = "APP_HOME";
 
 function ApplicationHome({ match }: Props) {
-  const applicationId = match.params.application;
-  const location = useLocation();
-
-  const { data, error } = useQuery<{
-    app: models.App;
-  }>(GET_APPLICATION, {
-    variables: {
-      id: applicationId,
-    },
-  });
-  useNavigationTabs(
+  const {
     applicationId,
-    NAVIGATION_KEY,
-    location.pathname,
-    data?.app.name
-  );
-
-  const errorMessage = formatError(error);
+    data,
+    error,
+    errorMessage
+  } = useApplicationHome({match});
 
   return (
     <PageContent
@@ -122,21 +102,3 @@ function ApplicationHome({ match }: Props) {
 }
 
 export default ApplicationHome;
-
-export const GET_APPLICATION = gql`
-  query getApplication($id: String!) {
-    app(where: { id: $id }) {
-      id
-      createdAt
-      updatedAt
-      name
-      description
-      color
-      githubTokenCreatedDate
-      githubSyncEnabled
-      githubRepo
-      githubLastSync
-      githubLastMessage
-    }
-  }
-`;

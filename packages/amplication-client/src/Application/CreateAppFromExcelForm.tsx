@@ -5,25 +5,20 @@ import React from "react";
 import { Button, EnumButtonStyle } from "../Components/Button";
 import { DisplayNameField } from "../Components/DisplayNameField";
 import { Form } from "../Components/Form";
-import EntitiesDiagram, {
-  EntitiesDiagramFormData,
-} from "../EntitiesDiagram/EntitiesDiagram";
+import EntitiesDiagram from "../EntitiesDiagram/EntitiesDiagram";
 import { CLASS_NAME } from "./CreateAppFromExcel";
+import useCreateAppFromExcelForm, { Props } from "./useCreateAppFromExcelForm";
 
-type Props = {
-  initialValues: EntitiesDiagramFormData;
-  fileName: string | null;
-  loading: boolean;
-  onSubmit: (data: EntitiesDiagramFormData) => void;
-  onClearForm: () => void;
-};
-export const CreateAppFromExcelForm = ({
-  initialValues,
-  fileName,
-  loading,
-  onSubmit,
-  onClearForm,
-}: Props) => {
+export const CreateAppFromExcelForm = (props:Props) => {
+
+  const {
+    initialValues,
+    fileName,
+    loading,
+    onSubmit,
+    onClearForm
+  } = useCreateAppFromExcelForm(props);
+
   return (
     <Formik
       initialValues={initialValues}

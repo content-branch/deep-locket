@@ -1,47 +1,21 @@
-import React, { useCallback } from "react";
-import { useHistory } from "react-router-dom";
-import { useQuery } from "@apollo/client";
+import React from "react";
 import "@rmwc/snackbar/styles";
 import { CircularProgress } from "@rmwc/circular-progress";
 import { Icon } from "@rmwc/icon";
-
-import * as models from "../models";
 import { Panel, EnumPanelStyle } from "@amplication/design-system";
-
-import { GET_ENTITIES } from "../Entity/EntityList";
-import { useTracking, Event as TrackEvent } from "../util/analytics";
 import { SvgThemeImage, EnumImages } from "../Components/SvgThemeImage";
 import "./EntitiesTile.scss";
-
-type Props = {
-  applicationId: string;
-};
+import useEntitiesTile, { Props } from "./useEntitiesTile";
 
 const CLASS_NAME = "entities-tile";
 
-const EVENT_DATA: TrackEvent = {
-  eventName: "entitiesTileClick",
-};
-
 function EntitiesTile({ applicationId }: Props) {
-  const history = useHistory();
-  const { data, loading } = useQuery<{
-    entities: models.Entity[];
-  }>(GET_ENTITIES, {
-    variables: {
-      id: applicationId,
-    },
-  });
-
-  const { trackEvent } = useTracking();
-
-  const handleClick = useCallback(
-    (event) => {
-      trackEvent(EVENT_DATA);
-      history.push(`/${applicationId}/entities`);
-    },
-    [history, trackEvent, applicationId]
-  );
+  
+  const {
+    data,
+    loading,
+    handleClick
+  } = useEntitiesTile({applicationId});
 
   return (
     <Panel

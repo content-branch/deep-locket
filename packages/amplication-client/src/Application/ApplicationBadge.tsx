@@ -3,24 +3,18 @@ import { NavLink } from "react-router-dom";
 import classNames from "classnames";
 import { CircleBadge } from "@amplication/design-system";
 import "./ApplicationBadge.scss";
+import useApplicationBadge, {Props} from "./useApplicationBadge";
 
-type Props = {
-  expanded: boolean;
-  url?: string;
-  name: string;
-  color?: string;
-  large?: boolean;
-  hideFullName?: boolean;
-};
-
-function ApplicationBadge({
-  expanded,
-  url,
-  name,
-  color,
-  large,
-  hideFullName,
-}: Props) {
+function ApplicationBadge(props:Props) {
+  const {
+    expanded,
+    url,
+    name,
+    color,
+    large,
+    hideFullName,
+  } = useApplicationBadge(props);
+  
   const badgeNode = (
     <>
       <CircleBadge name={name} color={color} />

@@ -6,7 +6,7 @@ import { Icon } from "@rmwc/icon";
 import { useQuery } from "@apollo/client";
 import { formatError } from "../util/error";
 import * as models from "../models";
-import { GET_APPLICATION } from "../Application/ApplicationHome";
+import { GET_APPLICATION } from "../Application/useApplicationHome";
 import "./SyncWithGithubPage.scss";
 import AuthAppWithGithub from "./AuthAppWithGithub";
 
